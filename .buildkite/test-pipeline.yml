@@ -1,0 +1,20 @@
+env:
+  PE_IMAGE_VERSION: 2.0.0
+steps:
+- label: 'Build and Push Docker Image :docker:'
+  command: |
+    echo "Logging into ECR..."
+    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 334963681447.dkr.ecr.us-east-1.amazonaws.com
+
+    echo "Building Docker image..."
+    cd kintent-sharedinfra/ecr/preview-environment-docker
+    docker build -t 334963681447.dkr.ecr.us-east-1.amazonaws.com/kintent/preview-environment:2.0.0 .
+
+    echo "Pushing Docker image..."
+    docker push 334963681447.dkr.ecr.us-east-1.amazonaws.com/kintent/preview-environment:2.0.0
+  plugins:
+  - github.com/buildkite-plugins/monorepo-diff-buildkite-plugin#v1.0.1:
+      watch:
+      - path: src/
+        config:
+                command: "echo Make Changes to Bin"
