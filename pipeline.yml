@@ -2,10 +2,10 @@ env:
   GLOBAL_TIMEOUT: 60
 
 steps:
-  - input: "Parameters"
+  - input: "Parametersss"
     fields:
       - text: "APP_VERSION"
-        hint: "Provide App Version if different from default"
+        hint: "Provide App Version if different from defaulttsss"
         required: false
         key: app-version
   - label: "Unit Testsss"
