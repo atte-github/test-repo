@@ -1,5 +1,5 @@
 steps:
-  - label: "Pre Executes"
+  - label: "Pre Executess"
     key: "pre-execute"
     command: "echo hi"
   - label: "Pre Execute"
