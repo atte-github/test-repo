@@ -1,38 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Track attempt count across retries
-ATTEMPT_FILE=".attempt-count"
+   echo "Retry count: $BUILDKITE_RETRY_COUNT"
 
-if [[ ! -f "$ATTEMPT_FILE" ]]; then
-  echo 1 > "$ATTEMPT_FILE"
-else
-  ATTEMPT=$(( $(cat "$ATTEMPT_FILE") + 1 ))
-  echo "$ATTEMPT" > "$ATTEMPT_FILE"
-fi
-
-ATTEMPT=$(cat "$ATTEMPT_FILE")
-echo "Running attempt: $ATTEMPT"
-
-case "$ATTEMPT" in
-  1)
-    echo "Exiting with -1"
-    exit -1
-    ;;
-  2)
-    echo "Exiting with 143"
-    exit 143
-    ;;
-  3)
-    echo "Exiting with 143"
-    exit 143
-    ;;
-  4)
-    echo "Exiting with -1"
-    exit -1
-    ;;
-  *)
-    echo "No more retries expected. Exiting successfully."
-    exit 0
-    ;;
-esac
+      if [[ "$BUILDKITE_RETRY_COUNT" == "0" ]]; then
+        echo "Run 1 → failing with -1"
+        exit -1
+      elif [[ "$BUILDKITE_RETRY_COUNT" == "1" ]]; then
+        echo "Run 2 → failing with 143"
+        exit 143
+      elif [[ "$BUILDKITE_RETRY_COUNT" == "2" ]]; then
+        echo "Run 3 → failing with 143"
+        exit 143
+      elif [[ "$BUILDKITE_RETRY_COUNT" == "3" ]]; then
+        echo "Run 4 → failing with -1"
+        exit -1
+      else
+        echo "Run 5+ → success"
+        exit 0
+      fi
