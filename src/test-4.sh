@@ -1,121 +1,38 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
-# Your org and suite slugs
-ORG_SLUG="atte-test-org-1"
-SUITE_SLUG="my-rspec-example-test-suite"
+# Track attempt count across retries
+ATTEMPT_FILE=".attempt-count"
 
-# Retry configuration
-MAX_RETRIES=5
-RETRY_DELAY=60
-ATTEMPT=0
-
-echo "⏳ Waiting for test results to be uploaded..."
-
-# Retry loop
-while [ $ATTEMPT -lt $MAX_RETRIES ]; do
-  ATTEMPT=$((ATTEMPT + 1))
-  echo "Attempt $ATTEMPT/$MAX_RETRIES: Fetching test runs for build ${BUILDKITE_BUILD_ID}..."
-  
-  RUNS=$(curl -s -H "Authorization: Bearer ${BUILDKITE_API_TOKEN}" \
-    "https://api.buildkite.com/v2/analytics/organizations/${ORG_SLUG}/suites/${SUITE_SLUG}/runs?build_id=${BUILDKITE_BUILD_ID}")
-  
-  # Check if we got valid JSON array
-  if echo "$RUNS" | jq -e 'type == "array"' > /dev/null 2>&1; then
-    TOTAL_RUNS=$(echo "$RUNS" | jq 'length')
-    
-    # If we found runs, break out of retry loop
-    if [ "$TOTAL_RUNS" -gt 0 ]; then
-      echo "✅ Found $TOTAL_RUNS test run(s)!"
-      break
-    fi
-  fi
-  
-  # If this isn't the last attempt, wait before retrying
-  if [ $ATTEMPT -lt $MAX_RETRIES ]; then
-    echo "No results yet, waiting ${RETRY_DELAY} seconds before retry..."
-    sleep $RETRY_DELAY
-  fi
-done
-
-# Check if we got valid JSON array after all retries
-if ! echo "$RUNS" | jq -e 'type == "array"' > /dev/null 2>&1; then
-  echo "❌ Error: API did not return an array. Response:"
-  echo "$RUNS"
-  
-  buildkite-agent annotate --context "test-summary" --style "error" << EOF
-## ⚠️ Test Summary Unavailable
-
-Could not fetch test results from Buildkite Test Analytics after $MAX_RETRIES attempts.
-EOF
-  exit 1
+if [[ ! -f "$ATTEMPT_FILE" ]]; then
+  echo 1 > "$ATTEMPT_FILE"
+else
+  ATTEMPT=$(( $(cat "$ATTEMPT_FILE") + 1 ))
+  echo "$ATTEMPT" > "$ATTEMPT_FILE"
 fi
 
-# Check if array is still empty after all retries
-TOTAL_RUNS=$(echo "$RUNS" | jq 'length')
-if [ "$TOTAL_RUNS" -eq 0 ]; then
-  buildkite-agent annotate --context "test-summary" --style "warning" << EOF
-## 📭 No Test Results Yet
+ATTEMPT=$(cat "$ATTEMPT_FILE")
+echo "Running attempt: $ATTEMPT"
 
-No test runs found for build #${BUILDKITE_BUILD_NUMBER} after waiting $(($MAX_RETRIES * $RETRY_DELAY)) seconds.
-EOF
-  exit 0
-fi
-
-# Parse results
-PASSED=$(echo "$RUNS" | jq '[.[] | select(.result == "passed")] | length')
-FAILED=$(echo "$RUNS" | jq '[.[] | select(.result == "failed")] | length')
-
-# Get the suite URL
-SUITE_URL="https://buildkite.com/organizations/${ORG_SLUG}/analytics/suites/${SUITE_SLUG}"
-
-echo "Counts - Passed: $PASSED, Failed: $FAILED, Total: $TOTAL_RUNS"
-
-# Build the annotation using heredoc directly
-buildkite-agent annotate --context "test-summary" --style "info" << EOF
-## 🧪 Test Results Summary
-
-**[Build #$BUILDKITE_BUILD_NUMBER]($BUILDKITE_BUILD_URL)**
-
-**[Total Runs]($SUITE_URL)** $TOTAL_RUNS
-
-**Passed ✅** $PASSED/$TOTAL_RUNS
-
-**Failed ❌** $FAILED/$TOTAL_RUNS
-
-$(if [ "$PASSED" -gt 0 ]; then
-  echo "**✅ [Passed Runs]($SUITE_URL)**"
-  echo ""
-  echo "$RUNS" | jq -r '.[] | select(.result == "passed") | "- [\(.branch)@\(.commit_sha[0:7])](\(.web_url))"'
-  echo ""
-fi)
-
-$(if [ "$FAILED" -gt 0 ]; then
-  echo "**❌ [Failed Runs]($SUITE_URL)**"
-  echo ""
-  echo "$RUNS" | jq -r '.[] | select(.result == "failed") | "- [\(.branch)@\(.commit_sha[0:7])](\(.web_url))"'
-  echo ""
-fi)
-EOF
-```
-
-**Changes:**
-- ✅ Removed the colons (`:`) after "Passed ✅" and "Failed ❌"
-- ✅ Removed the colon after "Total Runs"
-- ✅ Better spacing between lines
-
-Output will now look like:
-```
-## 🧪 Test Results Summary
-
-Build #24
-
-Total Runs 1
-
-Passed ✅ 1/1
-
-Failed ❌ 0/1
-
-✅ Passed Runs
-
-- main@f31e359
+case "$ATTEMPT" in
+  1)
+    echo "Exiting with -1"
+    exit -1
+    ;;
+  2)
+    echo "Exiting with 143"
+    exit 143
+    ;;
+  3)
+    echo "Exiting with 143"
+    exit 143
+    ;;
+  4)
+    echo "Exiting with -1"
+    exit -1
+    ;;
+  *)
+    echo "No more retries expected. Exiting successfully."
+    exit 0
+    ;;
+esac
