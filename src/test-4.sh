@@ -11,7 +11,7 @@ echo "Retry count: $BUILDKITE_RETRY_COUNT"
 # 4 → -1
 
 if [ "$BUILDKITE_RETRY_COUNT" -eq 0 ]; then
-  echo "First run → failing with -1"
+  echo "First run → failing with 1"
   exit -1
 fi
 
@@ -21,7 +21,7 @@ if [ "$BUILDKITE_RETRY_COUNT" -eq 1 ]; then
 fi
 
 if [ "$BUILDKITE_RETRY_COUNT" -eq 2 ]; then
-  echo "Retry 2 → failing with -1"
+  echo "Retry 2 → failing with 1"
   exit -1
 fi
 
@@ -31,7 +31,7 @@ if [ "$BUILDKITE_RETRY_COUNT" -eq 3 ]; then
 fi
 
 if [ "$BUILDKITE_RETRY_COUNT" -eq 4 ]; then
-  echo "Retry 4 → failing with -1"
+  echo "Retry 4 → failing with 1"
   exit -1
 fi
 
