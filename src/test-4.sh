@@ -10,24 +10,29 @@ echo "================================================"
 
 case $RETRY_COUNT in
   0)
-    echo "❌ First attempt - exiting with 143"
+    echo "❌ First attempt - exiting with -1"
     sleep 1
-    exit 143
+    exit -1
     ;;
   1)
-    echo "❌ Second attempt - exiting with -1"
-    sleep 1
-    exit 255
-    ;;
-  2)
-    echo "❌ Third attempt - exiting with 143"
+    echo "❌ Second attempt - exiting with 143"
     sleep 1
     exit 143
     ;;
-  3)
-    echo "❌ Fourth attempt - exiting with -1"
+  2)
+    echo "❌ Third attempt - exiting with -1"
     sleep 1
-    exit 255
+    exit -1
+    ;;
+  3)
+    echo "❌ Fourth attempt - exiting with 143"
+    sleep 1
+    exit 143
+    ;;
+  4)
+    echo "❌ Fifth attempt - exiting with -1"
+    sleep 1
+    exit -1
     ;;
   *)
     echo "✅ Unexpected retry count, passing..."
