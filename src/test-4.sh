@@ -13,7 +13,7 @@ case $RETRY_COUNT in
     echo "❌ First attempt - exiting with -1"
     sleep 1
     # exit -1
-    exit 2
+    exit 255
     ;;
   1)
     echo "❌ Second attempt - exiting with 143"
