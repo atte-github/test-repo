@@ -23,15 +23,3 @@ total_builds=$(echo "$response" | jq '.data.pipeline.builds.edges | length')
 
 echo "Total Builds: $total_builds"
 echo "Total Jobs: $total_jobs"
-```
-
-That's it! Save as `count_jobs.sh`, make executable with `chmod +x count_jobs.sh`, and run `./count_jobs.sh`
-
-**Key changes:**
-- Removed the complex loop - just use `jq` to sum all the counts in one line
-- Uses `jq '[.data.pipeline.builds.edges[].node.jobs.count] | add'` to extract all counts and add them up
-
-This should give you:
-```
-Total Builds: 25
-Total Jobs: 68
