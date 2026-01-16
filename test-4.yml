@@ -1,7 +1,7 @@
 steps:
   - label: "Pre Executess"
     key: "pre-execute"
-command: "echo hi"
+    command: "echo hi"
  
 
   - label: "Get webhook"
