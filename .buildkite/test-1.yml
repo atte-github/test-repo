@@ -1,0 +1,10 @@
+steps:
+  - label: "Main work"
+    command: "echo 'doing main work'"
+  
+  - label: "Trigger cleanup analysis"
+    trigger: "merge"
+    build:
+      env:
+        ORIGINAL_BUILD_ID: "${BUILDKITE_BUILD_ID}"
+        ORIGINAL_JOB_ID: "${BUILDKITE_JOB_ID}"
