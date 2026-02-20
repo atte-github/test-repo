@@ -1,9 +1,9 @@
 #!/bin/bash
 
-BUILDKITE_TOKEN="bkua_aecde0da59e7500d4c534ff80e1333fd30dd7fd4"
-PIPELINE_SLUG="atte-test-org-1/first"
-START_DATE="2025-11-01T00:00:00Z"
-END_DATE="2025-11-07T23:59:59Z"
+BUILDKITE_TOKEN="bkua_382edab54d5e878083ccaf5514cbd4ea03acb4fb"
+PIPELINE_SLUG="tonbara/deploy"
+START_DATE="2026-01-01T00:00:00Z"
+END_DATE="2026-01-16T23:59:59Z"
 
 echo "Counting jobs for: $PIPELINE_SLUG"
 echo "Period: $START_DATE to $END_DATE"
