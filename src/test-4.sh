@@ -10,21 +10,21 @@ echo "================================================"
 
 case $RETRY_COUNT in
   0)
-    echo "❌ First attempt - exiting with -1"
+    echo "❌ First attempt - exiting with 255"
     sleep 1
-    # exit -1
+    # exit 255
     exit 255
     ;;
   1)
-    echo "❌ Second attempt - exiting with 143"
+    echo "❌ Second attempt - exiting with 2"
     sleep 1
-    # exit 143
+    # exit 2
     exit 2
     ;;
   2)
-    echo "❌ Third attempt - exiting with -1"
+    echo "❌ Third attempt - exiting with 255"
     sleep 1
-    # exit -1
+    # exit 255
     exit 255
     ;;
   3)
