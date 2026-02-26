@@ -25,7 +25,7 @@ case $RETRY_COUNT in
     echo "❌ Third attempt - exiting with -1"
     sleep 1
     # exit -1
-    exit 1
+    exit 255
     ;;
   3)
     echo "❌ Fourth attempt - exiting with 143"
