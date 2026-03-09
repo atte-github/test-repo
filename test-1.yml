@@ -17,10 +17,10 @@ steps:
       set -euo pipefail
 
       # IMPORTANT: do NOT escape the $ here. You want $(...) to execute.
-      triggered_build_id="$(buildkite-agent meta-data get triggered_build_id)"
+      triggered_build_id="$$(buildkite-agent meta-data get triggered_build_id)"
 
-      echo "Triggered build id: ${triggered_build_id}"
+      echo "Triggered build id: $$triggered_build_id"
 
-      buildkite-agent artifact download "dist/release.tgz" . --build "${triggered_build_id}"
+      buildkite-agent artifact download "dist/release.tgz" . --build "$$triggered_build_id"
 
       ls -lah dist
