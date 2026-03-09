@@ -1,7 +1,7 @@
 steps:
   - label: ":arrow_right: Trigger child build"
-    key: trigger_child
-    trigger:"merge"
+    key: "trigger-step"
+    trigger: "merge"
     build:
       env:
         PARENT_TRIGGER_JOB_ID: "$$BUILDKITE_JOB_ID"
