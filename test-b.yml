@@ -9,4 +9,5 @@ steps:
 
       buildkite-agent artifact upload "dist/release.tgz"
 
-      buildkite-agent meta-data set triggered_build_id "$BUILDKITE_BUILD_ID" --job "$PARENT_TRIGGER_JOB_ID"
+      buildkite-agent meta-data set child_build_id "$BUILDKITE_BUILD_ID" --job "$PARENT_TRIGGER_JOB_ID"
+       buildkite-agent meta-data set child_job_id "$BUILDKITE_JOB_ID" --job "$PARENT_TRIGGER_JOB_ID"
