@@ -1,0 +1,16 @@
+steps:
+  - label: ":hammer: Build + upload + report build id to parent"
+    command: |
+      set -euo pipefail
+
+      mkdir -p dist
+      echo "hello from child build ${BUILDKITE_BUILD_ID}" > dist/info.txt
+      tar -czf dist/release.tgz -C dist info.txt
+
+      buildkite-agent artifact upload "dist/release.tgz"
+
+      echo "PARENT_TRIGGER_JOB_ID=${PARENT_TRIGGER_JOB_ID}"
+      echo "CHILD_BUILD_ID=${BUILDKITE_BUILD_ID}"
+
+      buildkite-agent meta-data set "triggered_build_id" "${BUILDKITE_BUILD_ID}" \
+        --job "${PARENT_TRIGGER_JOB_ID}"
