@@ -1,11 +1,13 @@
+# Parent pipeline (the triggering “release” pipeline)
 steps:
   - label: ":arrow_right: Trigger build pipeline"
     key: "trigger_build"
-    trigger: "merge"            # slug of the child pipeline
+    trigger: "build"   # slug of the child pipeline
     build:
-      message: "Build artifacts for release ${BUILDKITE_BUILD_NUMBER}"
+      # IMPORTANT: variables here become env vars on the triggered build
       env:
-        # IMPORTANT: runtime interpolation so this becomes the *job id of this trigger step*
+        # runtime interpolation: at runtime in *this* job, $$BUILDKITE_JOB_ID becomes the
+        # parent trigger-step job id, and that value is passed into the child build env.
         PARENT_TRIGGER_JOB_ID: "$$BUILDKITE_JOB_ID"
 
   - wait
@@ -14,8 +16,11 @@ steps:
     command: |
       set -euo pipefail
 
-      triggered_build_id="$(buildkite-agent meta-data get "triggered_build_id")"
+      # IMPORTANT: do NOT escape the $ here. You want $(...) to execute.
+      triggered_build_id="$(buildkite-agent meta-data get triggered_build_id)"
+
       echo "Triggered build id: ${triggered_build_id}"
 
       buildkite-agent artifact download "dist/release.tgz" . --build "${triggered_build_id}"
+
       ls -lah dist
