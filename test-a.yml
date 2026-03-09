@@ -1,0 +1,19 @@
+steps:
+  - label: ":arrow_right: Trigger child build"
+    key: trigger_child
+    trigger:"merge"
+    build:
+      env:
+        PARENT_TRIGGER_JOB_ID: "$$BUILDKITE_JOB_ID"
+
+  - wait
+
+  - label: ":package: Download artifact from child build"
+    command: |
+      set -euo pipefail
+
+      triggered_build_id="$(buildkite-agent meta-data get triggered_build_id)"
+      echo "Triggered build id: ${triggered_build_id}"
+
+      buildkite-agent artifact download "dist/release.tgz" . --build "${triggered_build_id}"
+      ls -lah dist
