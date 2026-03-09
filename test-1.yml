@@ -2,7 +2,7 @@
 steps:
   - label: ":arrow_right: Trigger build pipeline"
     key: "trigger_build"
-    trigger: "build"   # slug of the child pipeline
+    trigger: "merge"   # slug of the child pipeline
     build:
       # IMPORTANT: variables here become env vars on the triggered build
       env:
