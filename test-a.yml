@@ -8,7 +8,7 @@ steps:
       PARENT_TRIGGER_JOB_ID: "${BUILDKITE_JOB_ID}"
   - wait: ~
   - env:
-     thing: $$(buildkite-agent meta-data get child_build_id)
+     thing: $(buildkite-agent meta-data get child_build_id)
     command: |
-      child_build_id=""
+      
       buildkite-agent artifact download "dist/release.tgz" . --build "$thing"
