@@ -1,19 +1,12 @@
+# Parent pipeline (the triggering “release” pipeline)
 steps:
-  - label: ":arrow_right: Trigger child build"
-    key: "trigger-step"
-    trigger: "merge"
-    build:
-      env:
-        PARENT_TRIGGER_JOB_ID: "$$BUILDKITE_JOB_ID"
-
-  - wait
-
-  - label: ":package: Download artifact from child build"
-    command: |
-      set -euo pipefail
-
-      triggered_build_id="$(buildkite-agent meta-data get triggered_build_id)"
-      echo "Triggered build id: ${triggered_build_id}"
-
-      buildkite-agent artifact download "dist/release.tgz" . --build "${triggered_build_id}"
-      ls -lah dist
+  - label: ":arrow_right: Trigger build pipeline"
+    key: "trigger_build"
+    trigger: "merge"   # slug of the child pipeline
+    build: 
+     env:
+      PARENT_TRIGGER_JOB_ID: "${BUILDKITE_JOB_ID}"
+  - wait: ~
+  - command: |
+      child_build_id="$(buildkite-agent meta-data get triggered_build_id)"
+      buildkite-agent artifact download "dist/release.tgz" . --build "$child_build_id"
