@@ -12,8 +12,4 @@ steps:
 
       echo "Child build id: ${BUILDKITE_BUILD_ID}"
       echo "Child job id: ${BUILDKITE_JOB_ID}"
-      echo "Parent trigger-step job id (from env): ${PARENT_TRIGGER_JOB_ID}"
-
-      # IMPORTANT: do NOT escape the $ signs here.
-      # We want the shell to expand these at runtime.
-      buildkite-agent meta-data set "triggered_build_id" "$BUILDKITE_BUILD_ID" --job "$PARENT_TRIGGER_JOB_ID"
+    
