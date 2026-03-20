@@ -1,3 +1,6 @@
+env:
+  TOP_LEVEL_PIPELINE: "false"
+
 # Parent pipeline (the triggering “release” pipeline)
 steps:
   - label: ":arrow_right: Trigger build pipeline"
