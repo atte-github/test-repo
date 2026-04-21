@@ -1,0 +1,17 @@
+steps:
+- skip: if_changed matched no unexcluded changed files in this build
+  group: ecr
+  steps:
+  - if: build.env("$BUILDKITE_AGENT_APPLY_IF_CHANGED") == "false"
+    block: ":rocket: Release ecr?"
+    prompt: Click to release the ecr module
+    blocked_state: passed
+  - label: ":github::terraform: Tag module - ecr"
+    agents:
+    - queue=default
+    command: ".buildkite/update_tag.sh ecr"
+    plugins:
+    - github.com/seek-oss/aws-sm-buildkite-plugin#v2.3.3:
+        json-to-env:
+        - json-key: "."
+          secret-id: buildkite/terraform-modules
