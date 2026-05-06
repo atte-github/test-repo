@@ -1,5 +1,5 @@
 agents:
-  queue: "developmentsssssssss"
+  queue: "developmentssssssssss"
   
 steps:
   - key: get-approvals
