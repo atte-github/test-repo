@@ -1,5 +1,5 @@
 env:
-  TOP_LEVEL_PIPELINE: "false"
+  TOP_LEVEL_PIPELINE: "falsee"
 
 # Parent pipeline (the triggering “release” pipeline)
 steps:
