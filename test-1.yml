@@ -3,7 +3,7 @@ env:
 
 # Parent pipeline (the triggering “release” pipeline)
 steps:
-  - label: ":arrow_right: Trigger build pipeline"
+  - label: ":arrow_right: Trigger build pipelines"
     key: "trigger_build"
     trigger: "merge"   # slug of the child pipeline
     build:
